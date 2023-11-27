@@ -7,40 +7,33 @@ def series(r_a, r_b):
 def parallel(r_a, r_b):
     return (r_a * r_b) / (r_a + r_b)
 
-
-def get_operations(n, target):
-    result = []
-
+def approximate_resistor_l1(n, r_t, r_0):
+    ops = []
     a, b = 0, 1
     c, d = 1, 0
+    target = r_t/r_0
     for _ in range(n):
         M = Fraction(a+c, b+d)
-        print(M, M.numerator/M.denominator, target)
         if M < target:
             a, b = M.numerator, M.denominator
-            result.append("+")
+            ops.append("+")
         elif M > target:
             c, d = M.numerator, M.denominator
-            result.append("//")
+            ops.append("//")
         else:
-            return result
-        
-    return result
+            break
+            
+    print(M.numerator/M.denominator * r_0)
 
-
-def stringify_ops(ops, resistor_str):
-    last = resistor_str
+    last = "(" * len(ops) + str(r_0)
     while ops:
-        last = "(" + last + ops.pop() + resistor_str + ")"
+        last += ops.pop() + str(r_0) + ")"
+
     return last
 
 
-def approximate_resistor_l1(n, r_t, r_0):
-    ops = get_operations(n, r_t/r_0)
-    return stringify_ops(ops, str(r_0))
-
-
-print(approximate_resistor_l1(5, pi, 2))
+ex1 = approximate_resistor_l1(8, pi, 4)
+print(ex1)
 
 
 
